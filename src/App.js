@@ -1,24 +1,48 @@
 import React from 'react';
-import logo from './logo.svg';
+import foods from './foods.json';
 import './App.css';
+import FoodBox from './components/FoodBox';
+import {useState} from 'react'
+import AddForm from './components/AddForm';
+import Search from './components/Search';
+import 'bulma/css/bulma.css';
 
 function App() {
+  const [foodsArray, setFoods] =  useState(foods)
+  const [form, setForm] = useState(false)
+  const [foodsArrayCopy, setFoodsCopy] = useState(foods)
+
+  function handleToggle(){
+    
+    setForm(!form)
+  }
+
+  function handleSubmit(event){
+    event.preventDefault()
+    let newFood = {
+      name: event.target.name.value, 
+      calories: event.target.price.value,
+      img: event.target.image.value
+    }
+    setFoods([newFood, ...foodsArray])
+    setForm(false)
+  }
   return (
+   
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {form ? <AddForm onSubmit={handleSubmit}/> : <button onClick={handleToggle}>Show Button</button>}
+     
+     {
+      foodsArray.map((elem,i) =>{
+        return (
+          
+            <div key={i}>
+            <FoodBox foodsArray={elem}/>
+            </div>
+          )
+        })
+      }
+      
     </div>
   );
 }
